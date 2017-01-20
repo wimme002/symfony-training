@@ -36,11 +36,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     main.vm.hostname = "symfony"
 
+    #Install ansible inside box
+    config.vm.provision "shell", inline: <<-SHELL
+        sudo echo "deb http://httpredir.debian.org/debian jessie-backports main contrib non-free" > /etc/apt/sources.list.d/jessie-backports.list
+        sudo apt-get update
+        sudo apt-get -t jessie-backports install ansible -y
+    SHELL
+
     main.vm.provider :virtualbox do |vb|
         vb.customize [
             "modifyvm", :id,
             "--memory", 1024,
-            "--cpus", 4,
         ]
     end
 
