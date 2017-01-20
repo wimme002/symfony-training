@@ -1,0 +1,2 @@
+[web]
+hypodroom.dev ansible_ssh_host=192.33.88.100  ansible_connection=local

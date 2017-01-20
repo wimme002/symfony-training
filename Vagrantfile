@@ -43,6 +43,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         sudo apt-get -t jessie-backports install ansible -y
     SHELL
 
+    main.vm.provision "shell",
+        inline: "ansible-galaxy install -r /vagrant/provisioning/requirements.yml"
+    main.vm.provision "shell",
+        inline: "ansible-playbook -vvvv -u vagrant -i /vagrant/provisioning/inventory/dev  /vagrant/provisioning/playbook.yml"
+
     main.vm.provider :virtualbox do |vb|
         vb.customize [
             "modifyvm", :id,

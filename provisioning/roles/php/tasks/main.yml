@@ -1,0 +1,46 @@
+---
+
+#install extra software needed for 7.1
+- name: Install apt-transport-https
+  apt:
+    name: apt-transport-https
+    update_cache: yes
+
+- name: Install lsb-release
+  apt:
+    name: lsb-release
+    update_cache: yes
+- name: Install ca-certificates
+  apt:
+    name: ca-certificates
+    update_cache: yes
+
+- name: APT | Add DotDeb jessie repository
+  apt_repository: repo="{{ item }}"
+  with_items:
+    - "deb https://packages.sury.org/php/ jessie main"
+    - "deb-src http://packages.dotdeb.org jessie all"
+  become: yes
+
+- name: APT | Install sury key
+  apt_key:
+    url: "https://packages.sury.org/php/apt.gpg"
+    state: present
+  become: yes
+
+- name: Install php 7.1 packages
+  become: yes
+  apt: pkg={{ item }} update_cache=yes state=latest
+  with_items: "{{ php_packages }}"
+  notify: restart php7.1-fpm
+
+- name: ensure timezone is set in cli php.ini
+  lineinfile: dest=/etc/php/7.1/cli/php.ini
+              regexp='date.timezone ='
+              line='date.timezone = {{ timezone }}'
+
+- name: ensure timezone is set in fpm php.ini
+  lineinfile: dest=/etc/php/7.1/fpm/php.ini
+              regexp='date.timezone ='
+              line='date.timezone = {{ timezone }}'
+  notify: restart php7.1-fpm
