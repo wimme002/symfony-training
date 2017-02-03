@@ -1,4 +1,2 @@
-- src: geerlingguy.nginx
-  version: 1.9.6
 - src:  geerlingguy.mysql
   version: 2.5.1

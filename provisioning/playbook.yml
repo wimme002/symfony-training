@@ -7,28 +7,6 @@
         host: "%"
         password: symfony
         priv: "*.*:ALL"
-
-    nginx_remove_default_vhost: true
-    nginx_vhosts_filename: "symfony.conf"
-    nginx_vhosts:
-      - listen: "80 default_server"
-        server_name: "symfony-training.dev www.symfony-training.dev"
-        root: "/var/www/example.com"
-        index: "index.php index.html index.htm"
-        extra_parameters: |
-          location / {
-            try_files $uri @app;
-          }
-          location @app {
-            fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
-            fastcgi_split_path_info ^(.+\.php)(/.*)$;
-            fastcgi_read_timeout 120;
-            include fastcgi_params;
-            fastcgi_param SCRIPT_FILENAME /vagrant/app/app.php;
-            fastcgi_param SCRIPT_NAME /vagrant/app/app.php;
-            fastcgi_param SYMFONY_ENV dev;
-            fastcgi_param SYMFONY_DEBUG 1;
-          }
     php_packages:
       - php7.1-fpm
       - php7.1-cli
@@ -46,7 +24,6 @@
     timezone: Europe/Brussels
 
   roles:
-    - { role: geerlingguy.nginx }
     - { role: php}
     - { role: composer}
     - { role: symfony }
