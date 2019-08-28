@@ -7,3 +7,8 @@
     state=present
     update_cache=yes
     cache_valid_time=1
+
+- name: set login dir for vagrant user
+  lineinfile:
+    path: /home/vagrant/.bashrc
+    line: cd /vagrant
