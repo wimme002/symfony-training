@@ -1,11 +1,13 @@
 ---
-- name: download symfony
+- name: download sf installer
   get_url:
-    url: https://symfony.com/installer
-    dest: /usr/local/bin/symfony
+    url: https://get.symfony.com/cli/installer
+    dest: /tmp/symfony3
+    mode: '0777'
 
-- name: make symfony executable
-  file:
-    path: /usr/local/bin/symfony
-    mode: a+x
-    state: file
+- name: Execute sf
+  command: /bin/bash /tmp/symfony3
+
+- name: Move sf
+  command: mv /root/.symfony/bin/symfony /usr/local/bin/symfony
+

@@ -8,20 +8,28 @@
         password: symfony
         priv: "*.*:ALL"
     php_packages:
-      - php7.1-fpm
-      - php7.1-cli
-      - php7.1-curl
-      - php7.1-dev
-      - php7.1-intl
-      - php7.1-xdebug
-      - php7.1-imap
-      - php7.1-mbstring
-      - php7.1-opcache
-      - php7.1-apcu
-      - php7.1-bcmath
-      - php7.1-xml
-      - php7.1-mysql
+      - php7.3-fpm
+      - php7.3-cli
+      - php7.3-curl
+      - php7.3-dev
+      - php7.3-intl
+      - php7.3-xdebug
+      - php7.3-imap
+      - php7.3-mbstring
+      - php7.3-opcache
+      - php7.3-apcu
+      - php7.3-bcmath
+      - php7.3-xml
+      - php7.3-mysql
     timezone: Europe/Brussels
+    php_memory_limit: 1024M
+    opcache_memory_consumption: 256
+    opcache_max_accelerated_files: 20000
+    opcache_validate_timestamps: 0
+    realpath_cache_size: 4096K
+    realpath_cache_ttl: 600
+    post_max_size: 32M
+    upload_max_filesize: 16M
 
   roles:
     - { role: php}

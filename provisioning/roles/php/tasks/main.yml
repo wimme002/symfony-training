@@ -1,6 +1,4 @@
----
-
-#install extra software needed for 7.1
+#install extra software needed for 7.3
 - name: Install apt-transport-https
   apt:
     name: apt-transport-https
@@ -15,32 +13,68 @@
     name: ca-certificates
     update_cache: yes
 
-- name: APT | Add DotDeb jessie repository
-  apt_repository: repo="{{ item }}"
-  with_items:
-    - "deb https://packages.sury.org/php/ jessie main"
-    - "deb-src http://packages.dotdeb.org jessie all"
-  become: yes
+- include: dotdeb.yml
 
-- name: APT | Install sury key
-  apt_key:
-    url: "https://packages.sury.org/php/apt.gpg"
-    state: present
+- name: Install php 7.3 packages
   become: yes
-
-- name: Install php 7.1 packages
-  become: yes
-  apt: pkg={{ item }} update_cache=yes state=latest
-  with_items: "{{ php_packages }}"
-  notify: restart php7.1-fpm
+  apt: pkg={{ php_packages }} update_cache=yes state=latest
+  notify: restart php7.3-fpm
 
 - name: ensure timezone is set in cli php.ini
-  lineinfile: dest=/etc/php/7.1/cli/php.ini
+  lineinfile: dest=/etc/php/7.3/cli/php.ini
               regexp='date.timezone ='
               line='date.timezone = {{ timezone }}'
 
 - name: ensure timezone is set in fpm php.ini
-  lineinfile: dest=/etc/php/7.1/fpm/php.ini
+  lineinfile: dest=/etc/php/7.3/fpm/php.ini
               regexp='date.timezone ='
               line='date.timezone = {{ timezone }}'
-  notify: restart php7.1-fpm
+  notify: restart php7.3-fpm
+
+- name: Set memory limit
+  lineinfile: dest=/etc/php/7.3/fpm/php.ini
+              regexp='memory_limit ='
+              line='memory_limit = {{ php_memory_limit }}'
+  notify: restart php7.3-fpm
+
+- name: Set opcache memory consumption
+  lineinfile: dest=/etc/php/7.3/fpm/php.ini
+              regexp='opcache.memory_consumption'
+              line='opcache.memory_consumption={{ opcache_memory_consumption }}'
+  notify: restart php7.3-fpm
+
+- name: Set opcache accelerated files
+  lineinfile: dest=/etc/php/7.3/fpm/php.ini
+              regexp='opcache.max_accelerated_files'
+              line='opcache.max_accelerated_files={{ opcache_max_accelerated_files }}'
+  notify: restart php7.3-fpm
+
+- name: Set realpath_cache_size
+  lineinfile: dest=/etc/php/7.3/fpm/php.ini
+              regexp='realpath_cache_size'
+              line='realpath_cache_size={{ realpath_cache_size }}'
+  notify: restart php7.3-fpm
+
+- name: Set realpath_cache_ttl
+  lineinfile: dest=/etc/php/7.3/fpm/php.ini
+              regexp='realpath_cache_ttl'
+              line='realpath_cache_ttl={{ realpath_cache_ttl }}'
+  notify: restart php7.3-fpm
+
+- name: Set post_max_size
+  lineinfile: dest=/etc/php/7.3/fpm/php.ini
+              regexp='post_max_size'
+              line='post_max_size={{ post_max_size }}'
+  notify: restart php7.3-fpm
+
+- name: Set upload_max_filesize
+  lineinfile: dest=/etc/php/7.3/fpm/php.ini
+              regexp='upload_max_filesize'
+              line='upload_max_filesize={{ upload_max_filesize }}'
+  notify: restart php7.3-fpm
+
+- name: Disable xdebug
+  lineinfile: dest=/etc/php/7.3/fpm/conf.d/20-xdebug.ini
+              regexp='zend_extension=xdebug.so'
+              line='#zend_extension=xdebug.so'
+  notify: restart php7.3-fpm
