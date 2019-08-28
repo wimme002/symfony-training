@@ -32,6 +32,7 @@
     upload_max_filesize: 16M
     default_programs:
       - git
+      - zip
 
   roles:
     - { role: programs}
