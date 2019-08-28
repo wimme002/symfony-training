@@ -30,11 +30,12 @@
     realpath_cache_ttl: 600
     post_max_size: 32M
     upload_max_filesize: 16M
+    default_programs:
+      - git
 
   roles:
+    - { role: programs}
     - { role: php}
     - { role: composer}
     - { role: symfony }
     - { role: geerlingguy.mysql }
-
-
